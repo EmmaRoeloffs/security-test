@@ -100,7 +100,8 @@ class PostController extends Controller
         // VULNERABLE VERSION (string concat):
         $rows = DB::select("SELECT * FROM posts WHERE title LIKE '%$q%' OR body LIKE '%$q%'");
         $posts = collect($rows)->mapInto(Post::class);
-
-        return view('posts.search', compact('posts', 'q'));
+        return view('posts.search', compact('posts','q'));
     }
+
+
 }

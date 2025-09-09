@@ -6,7 +6,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('posts');
 });
 
 Route::get('/dashboard', function () {
@@ -18,14 +18,19 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // posts
     Route::get('/', [PostController::class,'index'])->name('home');
     Route::resource('posts', PostController::class)->middleware('auth');
-    Route::post('comments', [CommentController::class,'store'])->middleware('auth');
 
-    // intentionally open admin for demo (before)
-Route::prefix('admin')->group(function(){
-    Route::get('users', [ProfileController::class,'index']); // vulnerable before
+    //c
+    Route::post('comments', [CommentController::class,'store']);
+    // geen ->middleware('auth'
 
+    // open admin for demo, unsafe!
+    Route::prefix('admin')->group(function(){
+    Route::get('users', [ProfileController::class,'index']); // vulnerable
+
+    // SQL injection vulnerability
     Route::get('/search', [PostController::class,'search']);
 });
 });
