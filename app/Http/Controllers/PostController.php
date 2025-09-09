@@ -93,15 +93,18 @@ class PostController extends Controller
      * Vulnerable search method (for SQLi demo).
      * Change to safe Eloquent query after showing exploit.
      */
-    public function search(Request $request)
+    public function search(\Illuminate\Http\Request $request)
     {
-        $q = $request->query('q', '');
+        // only grab ?q= value, default empty string
 
-        // VULNERABLE VERSION (string concat):
-        $rows = DB::select("SELECT * FROM posts WHERE title LIKE '%$q%' OR body LIKE '%$q%'");
-        $posts = collect($rows)->mapInto(Post::class);
+        $q = $request->query('q', '');
+        // vulnerable raw SQL (string concatenation)
+        $rows = DB::select("SELECT * FROM posts WHERE title LIKE '%$q%'");
+
+        // maakt er een collection van Post modellen van
+        $posts = Post::hydrate($rows);
+
         return view('posts.search', compact('posts','q'));
     }
-
 
 }
