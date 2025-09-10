@@ -4,18 +4,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CommandController;
 
 Route::get('/', function () {
-    return view('posts');
+    return view('dashboard');
 });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/', [PostController::class,'index'])->name('home');      // lijst posts
-Route::get('/search', [PostController::class,'search'])->name('search'); // SQLi demo (public)
-Route::post('/comments', [CommentController::class,'store']);        // CSRF demo (public, geen auth)
+
+Route::get('/posts', [PostController::class,'index'])->name('posts.index');
+Route::get('/search', [PostController::class,'search'])->name('search'); // SQLi demo
+Route::post('/comments', [CommentController::class,'store']);        // CSRF demo (geen auth)
 
 /**
  * Auth-only
@@ -32,8 +34,12 @@ Route::middleware(['auth','verified'])->group(function () {
 
     // Broken Access Control demo: GEEN can:admin
     Route::prefix('admin')->group(function () {
-        Route::get('users', [ProfileController::class,'index']); // kwetsbaar: elke ingelogde user kan dit zien
+    Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index']);
     });
+
+    Route::get('/command', fn () => view('command'))->name('command'); // RCE demo
+    Route::post('/command/run', [CommandController::class, 'run'])->name('command.run');
+    Route::get('/posts/{post}', [PostController::class,'show'])->name('posts.show');
 });
 
 require __DIR__.'/auth.php';

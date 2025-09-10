@@ -26,13 +26,16 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-     public function store(Request $r){
-        // Kwetsbaar
-        $data = $r->only(['post_id','body']);           // geen validate()
-        $data['user_id'] = auth()->id() ?? 1;
-        Comment::create($data);
-        return back();
-    }
+public function store(Request $r)
+{
+    Comment::create([
+        'post_id' => $r->post_id,
+        'user_id' => auth()->check() ? auth()->id() : null,
+        'body'    => $r->body,
+    ]);
+
+    return redirect()->route('posts.show', $r->post_id);
+}
 
     /**
      * Display the specified resource.

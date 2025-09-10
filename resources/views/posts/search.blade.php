@@ -1,3 +1,5 @@
+<x-app-layout>
+
 <h2>Search</h2>
 <form method="GET" action="{{ route('search') }}">
   <input name="q" placeholder="search">
@@ -11,3 +13,5 @@
 @empty
   <p>No results.</p>
 @endforelse
+
+</x-app-layout>

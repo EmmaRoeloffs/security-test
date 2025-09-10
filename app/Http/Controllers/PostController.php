@@ -44,18 +44,19 @@ class PostController extends Controller
 
         $post = Post::create($data + ['user_id' => auth()->id()]);
 
-        return redirect()->route('posts.show', $post);
+        return redirect()->route('posts.index', $post);
     }
 
     /**
      * Display the specified resource.
      */
+
     public function show(Post $post)
     {
-        $post->load('comments.user');
+         $post->load(['comments' => fn($q) => $q->latest()->with('user')]);
         return view('posts.show', compact('post'));
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      */
