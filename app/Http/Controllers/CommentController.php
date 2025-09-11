@@ -26,10 +26,24 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+<<<<<<< Updated upstream
     public function store(Request $request)
     {
         //
     }
+=======
+public function store(\Illuminate\Http\Request $r)
+{
+    $data = $r->validate([
+        'post_id' => ['required','exists:posts,id'],
+        'body'    => ['required','string'],
+    ]);
+
+    \App\Models\Comment::create($data + ['user_id' => auth()->id()]);
+
+    return redirect()->route('posts.show', $data['post_id'])->with('ok','Comment geplaatst');
+}
+>>>>>>> Stashed changes
 
     /**
      * Display the specified resource.

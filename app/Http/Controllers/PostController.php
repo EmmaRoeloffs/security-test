@@ -55,6 +55,7 @@ class PostController extends Controller
         $post->load('comments.user');
         return view('posts.show', compact('post'));
     }
+<<<<<<< Updated upstream
 
     /**
      * Show the form for editing the specified resource.
@@ -64,10 +65,9 @@ class PostController extends Controller
         // Only owner or admin should edit (policy can enforce this later)
         return view('posts.edit', compact('post'));
     }
+=======
+>>>>>>> Stashed changes
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Post $post)
     {
         $data = $request->validate([
@@ -90,11 +90,11 @@ class PostController extends Controller
     }
 
     /**
-     * Vulnerable search method (for SQLi demo).
-     * Change to safe Eloquent query after showing exploit.
+     * Vulnerable search method (for SQLi).
      */
     public function search(Request $request)
     {
+<<<<<<< Updated upstream
         $q = $request->query('q', '');
 
         // VULNERABLE VERSION (string concat):
@@ -102,5 +102,13 @@ class PostController extends Controller
         $posts = collect($rows)->mapInto(Post::class);
 
         return view('posts.search', compact('posts', 'q'));
+=======
+        //safe version using Eloquent
+        $q = (string) $request->query('q','');
+        $posts = \App\Models\Post::query()
+        ->where('title','like',"%{$q}%")
+        ->latest()->get();
+        return view('posts.search', compact('posts','q'));
+>>>>>>> Stashed changes
     }
 }
