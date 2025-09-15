@@ -6,7 +6,7 @@
   <button>Go</button>
 </form>
 
-<p>Query: {!! $q !!}</p> {{-- laat dit zo voor reflected XSS demo --}}
+<p>Query: {!! $q !!}</p> 
 
 @forelse($posts as $p)
   <article><h4>{{ $p->title }}</h4><p>{{ \Illuminate\Support\Str::limit($p->body,120) }}</p></article>

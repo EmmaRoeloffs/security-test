@@ -10,7 +10,6 @@ class PostController extends Controller
 {
     public function __construct()
     {
-        // Require login except for viewing and searching
         $this->middleware('auth')->except(['index', 'show', 'search']);
     }
 
@@ -56,7 +55,7 @@ class PostController extends Controller
          $post->load(['comments' => fn($q) => $q->latest()->with('user')]);
         return view('posts.show', compact('post'));
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -90,19 +89,16 @@ class PostController extends Controller
         return redirect()->route('posts.index');
     }
 
-    /**
-     * Vulnerable search method (for SQLi demo).
-     * Change to safe Eloquent query after showing exploit.
-     */
+
     public function search(\Illuminate\Http\Request $request)
     {
-        // only grab ?q= value, default empty string
+
 
         $q = $request->query('q', '');
         // vulnerable raw SQL (string concatenation)
         $rows = DB::select("SELECT * FROM posts WHERE title LIKE '%$q%'");
+        //veilige versie: Post::where('title','like',"%{$q}%")->paginate();
 
-        // maakt er een collection van Post modellen van
         $posts = Post::hydrate($rows);
 
         return view('posts.search', compact('posts','q'));
