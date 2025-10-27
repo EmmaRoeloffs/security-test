@@ -98,6 +98,7 @@ class PostController extends Controller
         // vulnerable raw SQL (string concatenation)
         $rows = DB::select("SELECT * FROM posts WHERE title LIKE '%$q%'");
         //veilige versie: Post::where('title','like',"%{$q}%")->paginate();
+        // Eloquent
 
         $posts = Post::hydrate($rows);
 

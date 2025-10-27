@@ -1,4 +1,4 @@
-{{-- resources/views/posts/show.blade.php --}}
+
 <x-app-layout>
 
 
